@@ -1,5 +1,5 @@
 <template>
-    <button type="submit" @click="method">
+    <button  @click="method">
         <slot></slot>
     </button>
 </template>

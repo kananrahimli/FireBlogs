@@ -4,6 +4,7 @@ import Home from '../views/Home.vue'
 import Blogs from '../views/Blogs.vue'
 import Login from '../views/Login.vue'
 import Register from '../views/Register.vue'
+import Profile from '../views/Profile.vue'
 import ResetPassword from '../views/ResetPassword.vue'
 Vue.use(VueRouter);
 
@@ -54,6 +55,13 @@ const routes = [
     component: Blogs,
     meta:{
       title:'Blogs'
+    }
+  },{
+    path: '/profile',
+    name: 'Profile',
+    component: Profile,
+    meta:{
+      title:'Profile'
     }
   },
 ]

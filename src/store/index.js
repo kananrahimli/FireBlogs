@@ -14,20 +14,42 @@ export default new Vuex.Store({
       { title: "Blog Card #4", photo: "stock-4", date: "May 1,2021" },
     ],
     editBlog:null,
-    showNavigation:null
+    showNavigation:null,
+
+    user:null,
+    profileEmail:null,
+    profileLastName:null,
+    profileFirstName:null,
+    profileUserName:null,
+    profilePassword:null,
+    profileId:null,
+    profileInitials:null
   },
   mutations: {
     setEditBlogs(state,payload){
       state.editBlog=payload
-      console.log(state.editBlog);
-    }
+    },
+   
+    setUserInformations(state,payload){
+      state.profileId=payload.id
+      state.profileEmail=payload.data().email
+      state.profileFirstName=payload.data().firstName,
+      state.profileLastName=payload.data().lastName
+      state.profileUserName=payload.data().userName
+      state.profilePassword=payload.data().password
+    },
+    setUserInitials(state){
+      state.profileInitials=state.profileFirstName.charAt(0).toUpperCase()+state.profileLastName.charAt(0).toUpperCase()
+    },
+     updateUser(state,payload){
+      state.user=payload
+    },
   },
   actions: {
     setEditBlogs(context,payload){
       context.commit('setEditBlogs',payload)
     },
     async register(_context,payload){
-   
         const firebaseAuth = await firebase.auth();
          await firebaseAuth.createUserWithEmailAndPassword(
           payload.email,
@@ -64,7 +86,6 @@ export default new Vuex.Store({
       },
 
       async login(_context,payload){
-        console.log(payload);
           const firebaseAuth= await firebase.auth()
           await firebaseAuth.signInWithEmailAndPassword(payload.email,payload.password)
           .then(()=>{
@@ -83,6 +104,55 @@ export default new Vuex.Store({
             }
             
           })
+      },
+
+     async resetPassword(_context,payload){
+       console.log(payload);
+       await firebase.auth().sendPasswordResetEmail(payload.email)
+        .then(()=>{
+         
+          console.log('Gonderildi');
+        })
+        .catch((err)=>{
+          console.log(err);
+          if(err.code==='auth/invalid-email'){
+            let error=new Error(  'Email formasını düzgün daxil edin');
+          throw error;
+          }else if(err.code==='auth/user-not-found'){
+            console.log(payload);
+            let error=new Error(  'Bu email ünvanına uyğun istifadəçi tapılmadı');
+            throw error;
+          }
+        })
+       
+      },
+
+      async getCurrentUser(context){
+        const currentUser=await db.collection("users").doc(firebase.auth().currentUser.uid).get()
+        context.commit('setUserInformations',currentUser);
+        context.commit('setUserInitials')
+
+      },
+
+      updateUser(context,payload){
+        context.commit('updateUser',payload)
+      },
+
+     async saveChanges(_context,payload){
+      const firebaseAuth = await firebase.auth();
+        
+        await db
+        .collection("users")
+        .doc(firebaseAuth.currentUser.uid)
+        .update({
+          firstName: payload.firstName,
+          lastName: payload.lastName,
+          userName: payload.userName,
+          email: payload.email,
+          password:payload.password
+        })
+        await firebaseAuth.currentUser.updateEmail(payload.email)
+        await firebaseAuth.currentUser.updatePassword(payload.password)
       }
     
   },
@@ -92,7 +162,8 @@ export default new Vuex.Store({
     },
     editBlog(state){
       return state.editBlog
-    }
+    },
+    
   },
   modules: {
   }

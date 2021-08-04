@@ -1,11 +1,16 @@
 <template>
   <div id="reset" class="row">
-    
+   
     <base-dialog :show="showModal" @close="closeModal" title="Reset Password">
-      <h4>If your account exits, you will recieve a email!!</h4>
+      <h4>{{message}}</h4>
     </base-dialog>
     <div class="col-md-5 px-5 px-md-0 justify-content-center d-flex align-items-center">
+      
       <div class="d-flex flex-column">
+         <p class="mx-auto">
+          Back to
+          <router-link to="/login" class="text-dark">{{ "Login" }}</router-link>
+        </p>
         <h1 class="my-4 mx-auto">Reset Password</h1>
         <p class="mx-auto">
           Forgot your passowrd? Enter your email to reset it
@@ -22,7 +27,7 @@
           </div>
         </form>
 
-        <button @click="showModalItem" class="mt-5">Reset</button>
+        <button @click="reset" class="mt-5">Reset</button>
       </div>
     </div>
     <div class="col-7 d-none d-md-block">
@@ -41,27 +46,39 @@ export default {
     return {
       email: null,
       showModal: false,
-      showSpinner:false
+      showSpinner:false,
+      message:''
     };
   },
   methods: {
-    showModalItem() {
-      this.showSpinner=true,
-      setTimeout(() => {
-        this.showSpinner=false
-        this.showModal = true;
-      }, 2000);
+    async reset(){
+      this.showSpinnertrue
+      try {
+       await this.$store.dispatch('resetPassword',{email:this.email})
+        this.showSpinner=false,
+        this.message='Zəhmət olmasa email adresinizi yoxlayın.'
+        this.showModal=true
+      } catch (error) {
+        this.message=error,
+        this.showSpinner=false,
+        this.showModal=true
+
+      }
       
     },
     closeModal() {
       this.showModal = false;
     },
   },
+  
 };
 </script>
 
 
 <style lang="scss" scoped>
+a{
+ text-decoration:underline black;
+}
 #reset {
   height: 100vh;
   button {

@@ -1,17 +1,18 @@
 <template>
-  <div class="app-wrapper">
-    <div class="app">
-      <Navigation v-if="showNavigation"></Navigation>
-      <router-view />
-      <Footer v-if="showNavigation"></Footer>
+    <div id="app" v-if="showApp">
+      <Navigation v-if="showNavigation"/>
+      <router-view  ></router-view>
+      <Footer v-if="showNavigation"/>
     </div>
-  </div>
 </template>
 
 <script>
 import Navigation from "./components/Navigation.vue";
 import Footer from "./components/Footer.vue";
+import firebase from "firebase/app";
+import "firebase/auth";
 export default {
+  name:'app',
   components: {
     Navigation,
     Footer,
@@ -19,19 +20,64 @@ export default {
   data() {
     return {
       showNavigation: true,
+      showApp:false
     };
   },
-  updated() {
-    console.log(this.$router.currentRoute.fullPath);
-    if (
-      this.$router.currentRoute.fullPath == "/login" ||
-      this.$router.currentRoute.fullPath == "/register" ||
-      this.$router.currentRoute.fullPath == "/reset-password"
+  computed:{
+    user(){
+      return this.$store.state.user
+    }
+  },
+  methods:{
+    checkRoute(){
+       if (
+      this.$route.fullPath ==="/login" ||
+      this.$route.fullPath ==="/register" ||
+      this.$route.fullPath === "/reset-password"
     ) {
       this.showNavigation=false
     }else{
       this.showNavigation=true
     }
+    },
+
+    checkApp(){
+     setTimeout(() => {
+          this.showApp=true
+        }, 2000);
+    }
+  },
+   created(){
+     console.log('reload');
+  
+     this.checkRoute()
+    firebase.auth().onAuthStateChanged((user)=>{
+       this.$store.dispatch('updateUser',user)
+      console.log(user);
+      if(user){
+        this.$store.dispatch('getCurrentUser')
+      }
+    }) 
+    this.checkApp()
+    
+   
+  
+    // if(window.location){
+    //   this.showApp=false
+    // }
+
+   
+    
+  },
+  updated() {
+this.checkApp()
+  this.checkRoute()
+    firebase.auth().onAuthStateChanged((user)=>{
+      this.$store.dispatch('updateUser',user)
+      if(user){
+        this.$store.dispatch('getCurrentUser')
+      }
+    })
   },
 };
 </script>
@@ -44,7 +90,7 @@ export default {
   box-sizing: border-box;
   font-family: "Quicksand", sans-serif;
 }
-.app {
+#app {
   display: flex;
   flex-direction: column;
   min-height: 100vh;

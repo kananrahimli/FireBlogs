@@ -36,6 +36,7 @@ export default {};
 
 <style lang="scss" scoped>
     .bg-dark{
+      margin-top: auto;
         padding: 128px 0;
 
         @media screen and (max-width: 768px){

@@ -30,7 +30,7 @@
           </div>
         </form>
 
-        <router-link to="/reset-password" class="text-dark mx-auto my-4"
+        <router-link to="/reset-password" class="text-dark text-decoration-none mx-auto my-4"
           >Forgot your password?</router-link
         >
     <base-spinner v-if="showSpinner"></base-spinner>
@@ -61,7 +61,6 @@ export default {
   },
   methods:{
    async login(){
-     console.log('clicked');
      if(
         this.email =="" || this.password =="" 
       ) {
@@ -74,7 +73,9 @@ export default {
         this.showSpinner=true
       try {
        await this.$store.dispatch('login',{email:this.email,password:this.password})
+       await this.$store.dispatch('getCurrentUser')
         this.$router.push('/home')
+        
       } catch (error) {
         this.showSpinner=false,
         this.showError=true,
@@ -86,12 +87,16 @@ export default {
     closeModal(){
       this.showError=false
     }
-  }
+  },
+  
 };
 </script>
 
 
 <style lang="scss" scoped>
+a{
+ text-decoration:underline black;
+}
 
 #login {
   height: 100vh;
@@ -147,7 +152,6 @@ export default {
 
   .col-7{
       height: 100vh;
-      background: red;
       background-image: url('../assets/background.png');
       background-size: cover;
       background-position: center;

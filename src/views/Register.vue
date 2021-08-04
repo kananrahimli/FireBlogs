@@ -98,7 +98,6 @@ export default {
   },
   methods: {
    async register() {
-     console.log('cliked');
       if (
         this.email == "" ||
         this.userName == "" ||
@@ -118,6 +117,7 @@ export default {
           lastName: this.lastName,
           userName: this.userName,
         });
+        await this.$store.dispatch('getCurrentUser')
          this.$router.push('/home')
         } catch (error) {
           this.showSpinner=false,
@@ -134,11 +134,15 @@ export default {
       this.showError = false;
     },
   },
+  
 };
 </script>
 
 
 <style lang="scss" scoped>
+a{
+ text-decoration:underline black;
+}
 #register {
   height: 100vh;
  
