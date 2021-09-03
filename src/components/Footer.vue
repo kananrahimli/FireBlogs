@@ -18,7 +18,7 @@
               <li>
                   <router-link to="/blogs">Blogs</router-link>
               </li>
-              <li>
+              <li v-if="admin===newAdmin">
                  <router-link to="/home">Cretae Post</router-link>
               </li>
           </ul>
@@ -31,7 +31,17 @@
 </template>
 
 <script>
-export default {};
+export default {
+  computed:{
+    admin() {
+      return this.$store.state.profileEmail;
+    },
+
+    newAdmin(){
+     return  this.$store.state.currentAdmin
+    }
+  }
+};
 </script>
 
 <style lang="scss" scoped>

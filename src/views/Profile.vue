@@ -1,7 +1,7 @@
 <template>
   <div id="profile" class="row align-items-center flex-column my-3 p-4">
     <base-dialog :show="showDialog" @close="closeModal" title="Saved Changes">
-     <h2>{{ msg }}</h2> 
+      <h2>{{ msg }}</h2>
     </base-dialog>
     <h1>Account Settings</h1>
     <div
@@ -18,6 +18,7 @@
       <span @click="showContainer = !showContainer" class="account my-3">{{
         this.$store.state.profileInitials
       }}</span>
+      <span class="isAdmin py-1" v-if="admin===newAdmin && isLogin"><i class="fas fa-user-cog"></i> Admin</span>
       <h2 class="d-block">{{ fullName }}</h2>
       <div class="input-group d-flex flex-column">
         <label for="" class="d-block">Email:</label>
@@ -59,7 +60,7 @@ export default {
     return {
       showDialog: false,
       showSpinner: false,
-      msg:'',
+      msg: "",
       email: "",
       firstName: "",
       userName: "",
@@ -78,6 +79,15 @@ export default {
         this.$store.state.profileLastName.slice(1).toLowerCase()
       );
     },
+    admin() {
+      return this.$store.state.profileEmail;
+    },
+     newAdmin(){
+     return  this.$store.state.currentAdmin
+    },
+    isLogin(){
+      return this.$store.state.isLogin
+    }
   },
   created() {
     this.email = this.$store.state.profileEmail;
@@ -89,8 +99,8 @@ export default {
 
   methods: {
     async saveChanges() {
-      this.showSpinner=true;
-      this.msg="Dəyişikliklər saxlanıldı"
+      this.showSpinner = true;
+      this.msg = "Dəyişikliklər saxlanıldı";
       await this.$store.dispatch("saveChanges", {
         email: this.email,
         password: this.password,
@@ -98,17 +108,17 @@ export default {
         lastName: this.lastName,
         firstName: this.firstName,
       });
-       this.showDialog=true;
-       this.showSpinner=false;
-       await this.$store.dispatch('getCurrentUser')
+      this.showDialog = true;
+      this.showSpinner = false;
+      await this.$store.dispatch("getCurrentUser");
       // if(this.password!=this.password && this.email!=this.email){
       //     this.$router.push("/login");
       // }
     },
 
-    closeModal(){
-      this.showDialog=false
-    }
+    closeModal() {
+      this.showDialog = false;
+    },
   },
 };
 </script>
@@ -121,7 +131,13 @@ export default {
     // width: 700px !important;
     // height: 100px;
     border-radius: 10px;
-    .input-group {
+    .isAdmin {
+      background: #000;
+      display: block;
+      color: #fff;
+      width: 100px;
+      text-align: center;
+      border-radius: 10px;
     }
   }
   span.account {

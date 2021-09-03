@@ -4,19 +4,27 @@
       <nav class="pb-md-0 pt-md-3 py-4">
         <div class="branding">
           <router-link :to="{ name: 'Home' }"
-            ><span @click="mobileNav = false,showContainer=false">FireBlogs</span></router-link
+            ><span @click="(mobileNav = false), (showContainer = false)"
+              >FireBlogs</span
+            ></router-link
           >
         </div>
         <div v-if="!mobile">
           <ul>
             <router-link class="link" :to="{ name: 'Home' }"
-              ><span @click="mobileNav = false,showContainer=false">Home</span></router-link
+              ><span @click="(mobileNav = false), (showContainer = false)"
+                >Home</span
+              ></router-link
             >
             <router-link class="link" :to="{ name: 'Blogs' }"
-              ><span @click="mobileNav = false,showContainer=false">Blogs</span></router-link
+              ><span @click="(mobileNav = false), (showContainer = false)"
+                >Blogs</span
+              ></router-link
             >
-            <router-link class="link" v-if="currentUser" :to="{}"
-              ><span @click="mobileNav = false,showContainer=false">CreatePost</span></router-link
+            <router-link class="link" v-if="admin===newAdmin && isLogin" :to="{name:'CreatePost'}"
+              ><span @click="(mobileNav = false), (showContainer = false)"
+                >CreatePost</span
+              ></router-link
             >
             <span
               @click="showContainer = !showContainer"
@@ -25,7 +33,7 @@
               >{{ this.$store.state.profileInitials }}</span
             >
             <router-link class="link" v-else :to="{ name: 'Login' }"
-              ><span @click="mobileNav = false,showContainer=false"
+              ><span @click="(mobileNav = false), (showContainer = false)"
                 >Login/Regsiter</span
               ></router-link
             >
@@ -37,13 +45,19 @@
       <transition name="mobile-nav" v-if="mobileNav">
         <ul class="mobile-nav">
           <router-link class="link" to="/home"
-            ><span @click="mobileNav = false,showContainer=false">Home</span>
+            ><span @click="(mobileNav = false), (showContainer = false)"
+              >Home</span
+            >
           </router-link>
           <router-link class="link" to="/blogs"
-            ><span @click="mobileNav = false,showContainer=false">Blogs</span></router-link
+            ><span @click="(mobileNav = false), (showContainer = false)"
+              >Blogs</span
+            ></router-link
           >
-          <router-link class="link" to="" v-if="currentUser"
-            ><span @click="mobileNav = false,showContainer=false">CreatePost</span></router-link
+          <router-link class="link" :to="{name:'CreatePost'}" v-if="admin===newAdmin && isLogin"
+            ><span @click="(mobileNav = false), (showContainer = false)"
+              >CreatePost</span
+            ></router-link
           >
 
           <span
@@ -53,7 +67,9 @@
             >{{ this.$store.state.profileInitials }}</span
           >
           <router-link class="link" v-else to="/login"
-            ><span @click="mobileNav = false,showContainer=false">Login/Regsiter</span></router-link
+            ><span @click="(mobileNav = false), (showContainer = false)"
+              >Login/Regsiter</span
+            ></router-link
           >
         </ul>
       </transition>
@@ -77,6 +93,15 @@
           ><i class="far fa-user-circle"></i>
           <span @click="(showContainer = false), (mobileNav = false)">
             Profile</span
+          ></router-link
+        >
+        <router-link
+          to="/admin"
+          class="text-white d-block mb-2 text-decoration-none"
+          v-if="admin===newAdmin"
+          ><i class="fas fa-user-cog"></i>
+          <span @click="(showContainer = false), (mobileNav = false)">
+            Admin</span
           ></router-link
         >
         <router-link to="/" class="text-white text-decoration-none"
@@ -117,6 +142,17 @@ export default {
     currentUser() {
       return this.$store.state.user;
     },
+    admin() {
+      return this.$store.state.profileEmail;
+    },
+
+    newAdmin(){
+     return  this.$store.state.currentAdmin
+    },
+    isLogin(){
+      return this.$store.state.isLogin
+    }
+
   },
   created() {
     this.checkscreen();
@@ -133,19 +169,23 @@ export default {
     },
 
     async logOut() {
-      
-     await  firebase.auth().signOut().then(()=>{
-         window.location.reload()
-       });
-    
-     this.showContainer=false
+      await firebase
+        .auth()
+        .signOut()
+        .then(() => {
+         
+          window.location.reload();
+           
+        });
+  
+     await this.$store.commit('isLogged',false)
+      this.showContainer = false;
       this.mobileNav = false;
-      
     },
 
     toggleNav() {
       this.mobileNav = !this.mobileNav;
-      this.showContainer=false
+      this.showContainer = false;
     },
   },
 };

@@ -1,6 +1,6 @@
 <template>
   <div class="blog-wrapper p-5">
-    <div class="toggle-edit">
+    <div class="toggle-edit"  v-if="admin===newAdmin && isLogin">
       <label for="edit" class="font-weight-bolder mr-4">Edit blogs</label>
       <input type="checkbox" name="edit" id="edit" v-model="editBlog" @change="setEditBlogs" />
     </div>
@@ -25,6 +25,16 @@ export default {
   computed: {
     sampleCards() {
       return this.$store.getters.sampleCards;
+    },
+     admin() {
+      return this.$store.state.profileEmail;
+    },
+
+    newAdmin(){
+     return  this.$store.state.currentAdmin
+    },
+    isLogin(){
+      return this.$store.state.isLogin
     }
   },
   data() {

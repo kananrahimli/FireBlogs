@@ -8,15 +8,23 @@
         :key="index"
       ></blog-post>
     </ul>
-    <div class="card-wrapper px-4">
-      <h2 class="pt-md-3 pt-5">Wiew more recent blogs</h2>
-      <div class="row justify-content-center mt-4">
-        <blog-card
+    <div class="card-wrapper px-4 ">
+      <div class="d-flex justify-content-between flex-wrap">
+         <h2 class="pt-md-3 pt-5">Wiew more recent blogs</h2>
+      <button @click="refresh" class="mt-md-3 mt-5"> Refresh Blogs</button>
+      </div>
+     
+     <base-spinner v-if="showSpinner"></base-spinner>
+      <div v-if="!showSpinner" class="row justify-content-center mt-4">
+        
+        
+          <blog-card
           class="col-md-3 mx-3 mt-4 mb-2"
           v-for="(card, index) in sampleCards"
           :key="index"
           :card="card"
         ></blog-card>
+        
       </div>
     </div>
   
@@ -36,6 +44,7 @@
 
 <script>
 import BlogPost from "../components/BlogPost.vue";
+import BaseSpinner from "../components/BaseSpinner.vue";
 import BlogCard from "../components/BlogCard.vue";
 import firebase from "firebase/app";
 import "firebase/auth";
@@ -44,9 +53,11 @@ export default {
   components: {
     BlogPost,
     BlogCard,
+    BaseSpinner
   },
   data() {
     return {
+      showSpinner:false,
       welcomeScreen: {
         title: "Welcome",
         blogPost:
@@ -63,9 +74,10 @@ export default {
         {
           title: "This is a Filler Title!",
           blogHtml: "This is a filler blog post title",
-          photo: "designed-for-everyone",
+          photo: "vue",
         },
       ],
+
     };
   },
   computed: {
@@ -76,6 +88,17 @@ export default {
       return firebase.auth().currentUser.uid;
     },
   },
+ 
+  methods:{
+    async refresh(){
+      
+       this.showSpinner=true;
+       await this.$store.dispatch('getCurrentBlogs')
+        setTimeout(() => {
+         this.showSpinner=false;
+      }, 5000);
+    }
+  }
 };
 </script>
 
@@ -99,4 +122,20 @@ export default {
     margin-top: 32px;
   }
 }
+ button{
+    // position: absolute;
+    // right: 10px;
+    // top: 10px;
+    text-decoration: none;
+    color: white;
+    font-size: 16px;
+    padding: 6px 18px;
+    background: black;
+    align-self: center;
+    border-radius: 50px;
+    // @media screen and (max-width:768px) {
+    //   right: 20px;
+    //   top: 50px;
+    // }
+  }
 </style>

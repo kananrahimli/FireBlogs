@@ -9,10 +9,10 @@
          <i class="far fa-trash-alt"></i>
         </div>
       </div>
-      <img
-        :src="require(`../assets/blogCards/${card.photo}.jpg`)"
-        class="img-fluid"
-      />
+      <div class="img-container" :style="{ backgroundImage: `url(${card.photo})` }" >
+        
+      </div>
+      
       <div class="info pb-5 ">
         <h4 class="pt-3 px-3">{{ card.title }}</h4>
         <h6 class="pb-4 px-3">{{ card.date }}</h6>
@@ -45,10 +45,16 @@ export default {
       box-shadow: 0px 4px 6px -1px rgba(0, 0, 0, 0.1),0px 2px 4px -1px rgba(0, 0, 0, 0.06);
     }
 
-    img{
+    .img-container{
+      height: 250px;
+      overflow: hidden;
+      background-size: cover;
       border-top-left-radius: 8px;
       border-top-right-radius: 8px;
+      background-position: center;
     }
+
+   
 
     .edit{
      position: absolute;

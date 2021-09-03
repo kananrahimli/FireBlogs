@@ -59,6 +59,7 @@ export default {
           errMsg:''
       }
   },
+ 
   methods:{
    async login(){
      if(
@@ -74,6 +75,7 @@ export default {
       try {
        await this.$store.dispatch('login',{email:this.email,password:this.password})
        await this.$store.dispatch('getCurrentUser')
+       await this.$store.commit('isLogged',true)
         this.$router.push('/home')
         
       } catch (error) {

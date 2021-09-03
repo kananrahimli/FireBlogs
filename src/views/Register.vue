@@ -118,6 +118,7 @@ export default {
           userName: this.userName,
         });
         await this.$store.dispatch('getCurrentUser')
+        await this.$store.commit('isLogged',true)
          this.$router.push('/home')
         } catch (error) {
           this.showSpinner=false,

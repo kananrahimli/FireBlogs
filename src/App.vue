@@ -44,18 +44,18 @@ export default {
     checkApp(){
      setTimeout(() => {
           this.showApp=true
-        }, 2000);
+        }, 1500);
     }
   },
    created(){
-     console.log('reload');
-  
-     this.checkRoute()
+      this.$store.dispatch('getCurrentBlogs')
+   this.checkRoute()
     firebase.auth().onAuthStateChanged((user)=>{
+     
        this.$store.dispatch('updateUser',user)
-      console.log(user);
       if(user){
         this.$store.dispatch('getCurrentUser')
+        this.$store.dispatch('getCurrentAdmin')
       }
     }) 
     this.checkApp()
@@ -70,14 +70,17 @@ export default {
     
   },
   updated() {
-this.checkApp()
+
   this.checkRoute()
     firebase.auth().onAuthStateChanged((user)=>{
       this.$store.dispatch('updateUser',user)
       if(user){
         this.$store.dispatch('getCurrentUser')
+        this.$store.dispatch('getCurrentAdmin')
+         this.$store.commit('isLogged',true)
       }
     })
+    this.checkApp()
   },
 };
 </script>
