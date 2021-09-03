@@ -173,8 +173,7 @@ export default {
         .auth()
         .signOut()
         .then(() => {
-         
-          window.location.reload();
+        
            
         });
   
