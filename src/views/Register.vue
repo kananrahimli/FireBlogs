@@ -119,7 +119,8 @@ export default {
         });
         await this.$store.dispatch('getCurrentUser')
         await this.$store.commit('isLogged',true)
-         this.$router.push('/home')
+        const redirectUrl='/'+(this.$route.query.redirect || 'home')
+         this.$router.push(redirectUrl)
         } catch (error) {
           this.showSpinner=false,
           this.errMsg=error

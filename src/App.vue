@@ -49,6 +49,7 @@ export default {
   },
    created(){
       this.$store.dispatch('getCurrentBlogs')
+      console.log(this.$store.getters.sampleCards);
    this.checkRoute()
     firebase.auth().onAuthStateChanged((user)=>{
      

@@ -9,10 +9,7 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     sampleCards: [
-      { title: "Blog Card #1", photo: "stock-1", date: "May 1,2021", html: "" },
-      { title: "Blog Card #2", photo: "stock-2", date: "May 1,2021", html: "" },
-      { title: "Blog Card #3", photo: "stock-3", date: "May 1,2021", html: "" },
-      { title: "Blog Card #4", photo: "stock-4", date: "May 1,2021", html: "" }
+     
     ],
 
     blogHtml: "Write your blog title here ....",
@@ -72,6 +69,11 @@ export default new Vuex.Store({
 
     loadBlogs(state, payload) {
       state.sampleCards = payload;
+    },
+    deleteBlogs(state,payload){
+      state.sampleCards=state.sampleCards.filter((card)=>{
+        return card.id!==payload
+      })
     }
   },
   actions: {
@@ -207,6 +209,7 @@ export default new Vuex.Store({
 
     async postNewBlog(_context, payload) {
       let blog = {
+        // id:`blog-item-${this.state.sampleCards.length+1}`,
         title: payload.title,
         html: payload.html,
         date: `${new Date().getDate()}/${new Date().getMonth()}/${new Date().getFullYear()}`
@@ -232,7 +235,7 @@ export default new Vuex.Store({
                 database
                 .ref("blogs")
                 .child(key)
-                .update({ imageUrl: imgurl });
+                .update({ imageUrl: imgurl,id:key });
               });
             })
            
@@ -252,14 +255,22 @@ export default new Vuex.Store({
           title: responseData[key].title,
           photo:responseData[key].imageUrl,
           date: responseData[key].date,
-          html: responseData[key].hmtl
+          html: responseData[key].html
         };
 
         blogs.push(blog);
       }
       context.commit("loadBlogs", blogs);
+    },
+
+    async delete(context,payload){
+      console.log(context);
+      context.commit('deleteBlogs',payload.id)
+      await database.ref('blogs').child(payload.id).remove();
+
     }
   },
+  
   getters: {
     sampleCards(state) {
       return state.sampleCards;

@@ -35,7 +35,7 @@
       <h3 class="text-uppercase text-dark col-3">
         Never Miss a Post.Register for Your free account today !
       </h3>
-      <router-link to="/register" class="text-uppercase">
+      <router-link to="/register?redirect=blogs" class="text-uppercase">
         Register for Fire blogs <i class="fas fa-angle-double-right"></i
       ></router-link>
     </div>

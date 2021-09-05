@@ -6,7 +6,7 @@
         </div>
 
         <div class="delete">
-         <i class="far fa-trash-alt"></i>
+         <i class="far fa-trash-alt" @click="remove"></i>
         </div>
       </div>
       <div class="img-container" :style="{ backgroundImage: `url(${card.photo})` }" >
@@ -16,7 +16,7 @@
       <div class="info pb-5 ">
         <h4 class="pt-3 px-3">{{ card.title }}</h4>
         <h6 class="pb-4 px-3">{{ card.date }}</h6>
-        <router-link to="/blogs" class="link px-3 text-decoration-none text-dark ">View Blog <i class="fas fa-angle-double-right"></i> </router-link>
+        <router-link :to="blogLink" class="link px-3 text-decoration-none text-dark ">View Blog <i class="fas fa-angle-double-right"></i> </router-link>
         
       </div>
     
@@ -29,8 +29,17 @@ export default {
   computed:{
     editBlog(){
       return this.$store.getters.editBlog
+    },
+    blogLink(){
+      return '/' + this.card.id
+    }
+  },
+  methods:{
+    remove(){
+      this.$store.dispatch('delete',{id:this.card.id})
     }
   }
+ 
 };
 </script>
 

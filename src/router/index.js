@@ -6,6 +6,7 @@ import Login from '../views/Login.vue'
 import Register from '../views/Register.vue'
 import Profile from '../views/Profile.vue'
 import Admin from '../views/Admin.vue'
+import BlogDetail from '../views/BlogDetail.vue'
 import ResetPassword from '../views/ResetPassword.vue'
 import CreatePost from '../views/CreatePost.vue'
 Vue.use(VueRouter);
@@ -58,7 +59,17 @@ const routes = [
     meta:{
       title:'Blogs'
     }
-  },{
+  },
+  {
+    path: '/:id',
+    name: 'Blog',
+    component: BlogDetail,
+    props:true,
+    meta:{
+      title:'Blog'
+    }
+  },
+  {
     path: '/profile',
     name: 'Profile',
     component: Profile,
@@ -88,6 +99,7 @@ const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes
+  
 })
 
 router.beforeEach((to,from,next)=> {
